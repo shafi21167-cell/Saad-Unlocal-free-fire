@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Fire - UID Unlock Panel</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #090d16, #1a103c);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .wrapper-box { max-width: 420px; }
+        .panel-card {
+            background: rgba(20, 24, 39, 0.95);
+            border: 2px solid #f59e0b;
+            padding: 35px 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            text-align: center;
+        }
+        .logo-area h1 {
+            color: #f59e0b;
+            font-size: 26px;
+            letter-spacing: 1.5px;
+            font-weight: bold;
+        }
+        .logo-area p {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: left;
+        }
+        .form-control {
+            background: #0f172a !important;
+            border: 1px solid #334155 !important;
+            color: #fff !important;
+            font-size: 18px !important;
+            font-weight: bold;
+            letter-spacing: 2px;
+            height: 48px;
+        }
+        .form-control:focus {
+            border-color: #f59e0b !important;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.5) !important;
+        }
+        .btn-unlock {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: none;
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            margin-top: 15px;
+            width: 100%;
+        }
+        .btn-unlock:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            color: #fff;
+        }
+        #result-box {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+        }
+        .footer-note {
+            margin-top: 25px;
+            font-size: 11px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container wrapper-box">
+        <div class="panel-card">
+            <div class="logo-area">
+                <h1>UNLOCK PLEASE</h1>
+                <p>আপনার ফ্রি ফায়ার অ্যাকাউন্ট আনলক করুন</p>
+            </div>
+            <form id="uidForm">
+                <div class="form-group">
+                    <label for="gameUid">Enter Game UID</label>
+                    <input type="text" id="gameUid" class="form-control text-center" placeholder="যেমন: 123456789" required>
+                </div>
+                <button type="submit" class="btn btn-warning btn-unlock">আনলক রিকোয়েস্ট পাঠান</button>
+            </form>
+            <div id="result-box"></div>
+            <div class="footer-note">
+                © Saad Web BD | Secure Private Server Portal
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {$('#uidForm').on('submit', function(e) {
+                e.preventDefault();
+                let uid = $('#gameUid').val().trim();
+                let resultBox = $('#result-box');
+
+                if (!uid || uid.length < 5) {
+                    resultBox.css({'background': 'rgba(239, 68, 68, 0.2)', 'color': '#ef4444', 'border': '1px solid #ef4444'});
+                    resultBox.html(`Not Unlock Your Account! দয়া করে সঠিক ও সম্পূর্ণ UID দিন।`).show();
+                    return;
+                }
+
+                resultBox.css({'color': '#fbbf24', 'background': 'transparent', 'border': 'none'});
+                resultBox.text("যাচাই করা হচ্ছে...").show();
+
+                $.ajax({
+                    url: '/api/unlock',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ uid: uid }),
+                    success: function(response) {
+                        if (response.success) {
+                            resultBox.css({'background': 'rgba(34, 197, 94, 0.2)', 'color': '#22c55e', 'border': '1px solid #22c55e'});
+                            resultBox.html(`Successfully Unlocked! UID: <b>${uid}</b> সফলভাবে আনলক হয়েছে।`);
+                        } else {
+                            resultBox.css({'background': 'rgba(239, 68, 68, 0.2)', 'color': '#ef4444', 'border': '1px solid #ef4444'});
+                            resultBox.html(`Not Unlock Your Account! সার্ভারে এই UID পাওয়া যায়নি।`);
+                        }
+                    },
+                    error: function() {
+                        resultBox.css({'background': 'rgba(239, 68, 68, 0.2)', 'color': '#ef4444', 'border': '1px solid #ef4444'});
+                        resultBox.html(`Not Unlock Your Account! সার্ভার কানেকশনে সমস্যা হয়েছে।`);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+  </html>
